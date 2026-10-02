@@ -158,51 +158,103 @@ export const AnalysisPage = () => {
           </div>
         ) : analysis ? (
           <>
-            {/* Top Analysis Score Card */}
-            <div className="card border p-4 p-md-5 mb-4 shadow-sm" style={{ backgroundColor: 'var(--bg-surface)' }}>
-              <div className="row align-items-center gy-4">
-                <div className="col-md-4 text-center border-md-end">
-                  <div className={`match-score-circle ${matchClass} mb-3`}>
-                    <span className="display-4 fw-bold">{analysis.overallMatchPercentage}%</span>
-                    <span className="small text-uppercase fw-semibold" style={{ fontSize: '0.75rem' }}>Match Score</span>
-                  </div>
-                  <span className={`badge bg-${analysis.readinessBadgeColor} px-3 py-1.5 rounded-pill fw-semibold`}>
-                    {analysis.readinessStatus.replace(/_/g, ' ')}
-                  </span>
-                  <div className="mt-3 text-muted small">
-                    Target Role: <strong style={{ color: 'var(--text-primary)' }}>{analysis.jobRoleTitle}</strong>
-                  </div>
-                </div>
 
-                <div className="col-md-8 ps-md-4">
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <Sparkles className="text-primary" size={20} />
-                    <h5 className="fw-bold mb-0" style={{ color: 'var(--text-primary)' }}>AI Career Fit Assessment</h5>
-                  </div>
-                  <p className="text-secondary mb-3 leading-relaxed">
-                    {analysis.aiSummaryRecommendation}
-                  </p>
+{/* Top Analysis Score Card */}
+<div
+  className="card border p-4 p-md-5 mb-4 shadow-sm"
+  style={{ backgroundColor: 'var(--bg-surface)' }}
+>
+  <div className="row align-items-center gy-4">
 
-                  <div className="row g-2 mb-4 text-center">
-                    <div className="col-4">
-                      <div className="p-2.5 rounded-3 border" style={{ backgroundColor: 'var(--bg-subtle)' }}>
-                        <span className="small text-muted d-block">Total Role Skills</span>
-                        <strong className="fs-5" style={{ color: 'var(--text-primary)' }}>{analysis.totalRoleSkills}</strong>
-                      </div>
-                    </div>
-                    <div className="col-4">
-                      <div className="p-2.5 rounded-3 border border-success-subtle bg-success-subtle">
-                        <span className="small text-success d-block">Matched Skills</span>
-                        <strong className="fs-5 text-success">{analysis.matchedSkillsCount}</strong>
-                      </div>
-                    </div>
-                    <div className="col-4">
-                      <div className="p-2.5 rounded-3 border border-warning-subtle bg-warning-subtle">
-                        <span className="small text-warning-emphasis d-block">Missing Skills</span>
-                        <strong className="fs-5 text-warning-emphasis">{analysis.missingSkillsCount}</strong>
-                      </div>
-                    </div>
-                  </div>
+    <div className="col-md-4 text-center border-md-end">
+
+      <div className={`match-score-circle ${matchClass} mb-3`}>
+        <span className="match-score-value">
+          {analysis.overallMatchPercentage}%
+        </span>
+
+        <span className="match-score-label">
+          Match Score
+        </span>
+      </div>
+
+      <span
+        className={`badge bg-${analysis.readinessBadgeColor} px-3 py-1 rounded-pill fw-semibold`}
+      >
+        {analysis.readinessStatus.replace(/_/g, ' ')}
+      </span>
+
+      <div className="mt-3 text-muted small">
+        Target Role:{' '}
+        <strong style={{ color: 'var(--text-primary)' }}>
+          {analysis.jobRoleTitle}
+        </strong>
+      </div>
+
+    </div>
+
+    <div className="col-md-8 ps-md-4">
+
+      <div className="d-flex align-items-center gap-2 mb-2">
+        <Sparkles className="text-primary" size={20} />
+
+        <h5
+          className="fw-bold mb-0"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          AI Career Fit Assessment
+        </h5>
+      </div>
+
+      <p className="text-secondary mb-3 leading-relaxed">
+        {analysis.aiSummaryRecommendation}
+      </p>
+
+      <div className="row g-2 mb-4 text-center">
+
+        <div className="col-4">
+          <div
+            className="p-2 rounded-3 border"
+            style={{ backgroundColor: 'var(--bg-subtle)' }}
+          >
+            <span className="small text-muted d-block">
+              Total Role Skills
+            </span>
+            <strong
+              className="fs-5"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              {analysis.totalRoleSkills}
+            </strong>
+          </div>
+        </div>
+
+        <div className="col-4">
+          <div className="p-2 rounded-3 border border-success-subtle bg-success-subtle">
+            <span className="small text-success d-block">
+              Matched Skills
+            </span>
+            <strong className="fs-5 text-success">
+              {analysis.matchedSkillsCount}
+            </strong>
+          </div>
+        </div>
+
+        <div className="col-4">
+          <div className="p-2 rounded-3 border border-warning-subtle bg-warning-subtle">
+            <span className="small text-warning-emphasis d-block">
+              Missing Skills
+            </span>
+            <strong className="fs-5 text-warning-emphasis">
+              {analysis.missingSkillsCount}
+            </strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
                   <div className="d-flex flex-wrap gap-2">
                     <Link to="/roadmap" className="btn btn-primary btn-sm d-flex align-items-center gap-1.5 px-3 py-2 shadow-sm">
