@@ -37,6 +37,7 @@ export const RegisterPage = () => {
     const fetchRoles = async () => {
       try {
         setRolesLoading(true);
+        setError('');
 
         const res = await rolesApi.getAllRoles();
 
@@ -49,6 +50,10 @@ export const RegisterPage = () => {
               : [];
 
         setRoles(roleData);
+
+        if (roleData.length === 0) {
+          setError('No career roles found. Please try again later.');
+        }
       } catch (err) {
         console.error('Failed to load career roles:', err);
         setError('Unable to load career roles. Please try again later.');
@@ -102,14 +107,30 @@ export const RegisterPage = () => {
   };
 
   const inputStyle = {
+    flex: '1 1 0%',
     minWidth: 0,
-    width: '100%',
+    width: '1%',
+    height: '48px',
     backgroundColor: 'var(--bg-subtle)',
     color: 'var(--text-primary)',
   };
 
   const iconStyle = {
+    display: 'flex',
+    flex: '0 0 48px',
+    width: '48px',
+    height: '48px',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'var(--bg-subtle)',
+  };
+
+  const inputGroupStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+    width: '100%',
   };
 
   return (
@@ -141,19 +162,22 @@ export const RegisterPage = () => {
               {error && (
                 <div className="alert alert-danger small d-flex align-items-center gap-2 mb-4">
                   <AlertCircle size={16} />
-                  {error}
+                  <span>{error}</span>
                 </div>
               )}
 
               <form onSubmit={handleSubmit}>
-                {/* Name and Email */}
+                {/* Full Name and Email */}
                 <div className="row g-3 mb-3">
                   <div className="col-12 col-md-6">
                     <label className="form-label small fw-semibold">
                       Full Name *
                     </label>
 
-                    <div className="input-group w-100">
+                    <div
+                      className="input-group"
+                      style={inputGroupStyle}
+                    >
                       <span
                         className="input-group-text border-end-0"
                         style={iconStyle}
@@ -169,6 +193,7 @@ export const RegisterPage = () => {
                         placeholder="Enter your full name"
                         value={formData.fullName}
                         onChange={handleChange}
+                        autoComplete="name"
                         required
                       />
                     </div>
@@ -179,7 +204,10 @@ export const RegisterPage = () => {
                       Email Address *
                     </label>
 
-                    <div className="input-group w-100">
+                    <div
+                      className="input-group"
+                      style={inputGroupStyle}
+                    >
                       <span
                         className="input-group-text border-end-0"
                         style={iconStyle}
@@ -195,6 +223,7 @@ export const RegisterPage = () => {
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleChange}
+                        autoComplete="email"
                         required
                       />
                     </div>
@@ -208,7 +237,10 @@ export const RegisterPage = () => {
                       Password *
                     </label>
 
-                    <div className="input-group w-100">
+                    <div
+                      className="input-group"
+                      style={inputGroupStyle}
+                    >
                       <span
                         className="input-group-text border-end-0"
                         style={iconStyle}
@@ -224,6 +256,7 @@ export const RegisterPage = () => {
                         placeholder="Minimum 6 characters"
                         value={formData.password}
                         onChange={handleChange}
+                        autoComplete="new-password"
                         minLength={6}
                         required
                       />
@@ -235,7 +268,10 @@ export const RegisterPage = () => {
                       Target Career Role *
                     </label>
 
-                    <div className="input-group w-100">
+                    <div
+                      className="input-group"
+                      style={inputGroupStyle}
+                    >
                       <span
                         className="input-group-text border-end-0"
                         style={iconStyle}
@@ -260,14 +296,17 @@ export const RegisterPage = () => {
                               : 'Select Target Career'}
                         </option>
 
-                        {roles.map((role) => (
-                          <option
-                            key={role.id ?? role.roleId}
-                            value={role.id ?? role.roleId}
-                          >
-                            {role.title ?? role.name}
-                          </option>
-                        ))}
+                        {roles.map((role) => {
+                          const roleId = role.id ?? role.roleId;
+                          const roleName =
+                            role.title ?? role.name ?? role.roleName;
+
+                          return (
+                            <option key={roleId} value={roleId}>
+                              {roleName}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                   </div>
@@ -280,7 +319,10 @@ export const RegisterPage = () => {
                       College / University
                     </label>
 
-                    <div className="input-group w-100">
+                    <div
+                      className="input-group"
+                      style={inputGroupStyle}
+                    >
                       <span
                         className="input-group-text border-end-0"
                         style={iconStyle}
@@ -309,7 +351,10 @@ export const RegisterPage = () => {
                       type="text"
                       name="degree"
                       className="form-control"
-                      style={inputStyle}
+                      style={{
+                        ...inputStyle,
+                        width: '100%',
+                      }}
                       placeholder="e.g. B.Tech CSE"
                       value={formData.degree}
                       onChange={handleChange}
@@ -325,7 +370,10 @@ export const RegisterPage = () => {
                       type="number"
                       name="graduationYear"
                       className="form-control"
-                      style={inputStyle}
+                      style={{
+                        ...inputStyle,
+                        width: '100%',
+                      }}
                       placeholder="e.g. 2027"
                       min={2020}
                       max={2035}
