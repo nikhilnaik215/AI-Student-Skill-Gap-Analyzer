@@ -1,5 +1,7 @@
+
 import axios from 'axios';
 
+// API Configuration
 const api = axios.create({
   baseURL: 'https://ai-student-skill-gap-analyzer.onrender.com/api',
   headers: {
@@ -7,37 +9,40 @@ const api = axios.create({
   },
 });
 
-export default api;
-
-// Request interceptor to automatically attach JWT token
+// Request Interceptor - Attach JWT Token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token expiration or unauthorized errors
+// Response Interceptor - Handle Unauthorized Requests
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Clear token if expired or unauthorized
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+      if (
+        window.location.pathname !== '/login' &&
+        window.location.pathname !== '/register'
+      ) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login?expired=true';
       }
     }
+
     return Promise.reject(error);
   }
 );
 
-// Auth Endpoints
+// Authentication Endpoints
 export const authApi = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (studentData) => api.post('/auth/register', studentData),
@@ -47,17 +52,22 @@ export const authApi = {
 export const profileApi = {
   getProfile: () => api.get('/student/profile'),
   updateProfile: (profileData) => api.put('/student/profile', profileData),
-  setTargetRole: (roleId) => api.put(`/student/profile/target-role/${roleId}`),
-  completeOnboarding: () => api.put('/student/profile/onboarding-complete'),
+  setTargetRole: (roleId) =>
+    api.put(`/student/profile/target-role/${roleId}`),
+  completeOnboarding: () =>
+    api.put('/student/profile/onboarding-complete'),
 };
 
 // Student Skills Endpoints
 export const studentSkillsApi = {
   getMySkills: () => api.get('/student/skills'),
   addSkill: (skillData) => api.post('/student/skills', skillData),
-  addSkillsBulk: (skillsList) => api.post('/student/skills/bulk', skillsList),
+  addSkillsBulk: (skillsList) =>
+    api.post('/student/skills/bulk', skillsList),
   updateSkill: (id, proficiency, yearsOfExperience) =>
-    api.put(`/student/skills/${id}?proficiency=${proficiency}&yearsOfExperience=${yearsOfExperience || 0}`),
+    api.put(
+      `/student/skills/${id}?proficiency=${proficiency}&yearsOfExperience=${yearsOfExperience || 0}`
+    ),
   deleteSkill: (id) => api.delete(`/student/skills/${id}`),
 };
 
@@ -71,8 +81,10 @@ export const rolesApi = {
 export const catalogSkillsApi = {
   getSkills: (search = '', category = '') => {
     const params = new URLSearchParams();
+
     if (search) params.append('search', search);
     if (category) params.append('category', category);
+
     return api.get(`/skills?${params.toString()}`);
   },
   createSkill: (data) => api.post('/skills', data),
@@ -112,7 +124,8 @@ export const resumeAnalyzerApi = {
 // YouTube Learning Resources Endpoints
 export const resourcesApi = {
   getAll: () => api.get('/resources'),
-  getBySkillName: (name) => api.get(`/resources/skill/${encodeURIComponent(name)}`),
+  getBySkillName: (name) =>
+    api.get(`/resources/skill/${encodeURIComponent(name)}`),
   create: (data) => api.post('/resources', data),
   update: (id, data) => api.put(`/resources/${id}`, data),
   delete: (id) => api.delete(`/resources/${id}`),
@@ -123,7 +136,8 @@ export const adminApi = {
   getStats: () => api.get('/admin/stats'),
   getStudents: () => api.get('/admin/students'),
   createRole: (roleData) => api.post('/admin/roles', roleData),
-  addSkillToRole: (roleId, skillData) => api.post(`/admin/roles/${roleId}/skills`, skillData),
+  addSkillToRole: (roleId, skillData) =>
+    api.post(`/admin/roles/${roleId}/skills`, skillData),
   deleteRole: (roleId) => api.delete(`/admin/roles/${roleId}`),
 };
 
